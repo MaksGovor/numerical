@@ -1,0 +1,22 @@
+{
+  "name": "numerical",
+  "version": "1.0.0",
+  "description": "labs of numerical methods",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaksGovor/numerical.git"
+  },
+  "keywords": [
+    "numerical"
+  ],
+  "author": "Maxim Govoruha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MaksGovor/numerical/issues"
+  },
+  "homepage": "https://github.com/MaksGovor/numerical#readme"
+}
