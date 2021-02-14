@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/MaksGovor/numerical/issues"
   },
-  "homepage": "https://github.com/MaksGovor/numerical#readme"
+  "homepage": "https://github.com/MaksGovor/numerical#readme",
+  "dependencies": {
+    "gaussian-elimination": "^1.0.2"
+  }
 }
