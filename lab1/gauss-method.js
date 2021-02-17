@@ -31,7 +31,7 @@ fns.maxItem = (matrix) => {
     }
   }
 
-  res.jN = matrix[res.jN].indexOf(res.num);
+  res.jN = matrix[res.iN].indexOf(res.num);
 
   return res;
 };
@@ -46,13 +46,15 @@ fns.matrixCopy = (matrix) => {
 };
 
 fns.swapRows = (matrix, row1, row2) => {
+  if (row1 === row2) return;
   const copyRow1 = matrix[row1];
   matrix[row1] = matrix[row2];
   matrix[row2] = copyRow1;
 };
 
 fns.swapCols = (matrix, col1, col2) => {
-  for (let i = 0; i < length; i++) {
+  if (col1 === col2) return;
+  for (let i = 0; i < matrix.length; i++) {
     const copyItem = matrix[i][col1];
     matrix[i][col1] = matrix[i][col2];
     matrix[i][col2] = copyItem;
@@ -65,9 +67,12 @@ const gauss = (matrix, vector) => {
   const continues = [];
 
   for (let q = 0; q < length; q++) {
-    const { iN, jN, num } = fns.maxItem(mat);
+    let { iN, jN, num } = fns.maxItem(mat);
+    fns.swapRows(mat, iN, q);
+    console.log({ iN, jN, q });
+    fns.swapCols(mat, jN, q);
+    iN = q;
     const mainLine = mat[iN];
-    console.log(num);
     continues.push(iN);
 
     for (let i = 0; i < length; i++) {
@@ -81,9 +86,9 @@ const gauss = (matrix, vector) => {
       for (let j = q; j < length; j++) {
         mat[i][j] = mat[i][j] - copyML[j];
       }
-
     }
-    console.log(mat);
+  console.log(mat);
+
   }
 
 };
