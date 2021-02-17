@@ -16,3 +16,9 @@ const vectorB = [
   13.48,
 ];
 
+const gauss = (matrix, vector) => {
+  const length = matrix.length;
+  console.log(length);
+}
+
+gauss(matrixA);
