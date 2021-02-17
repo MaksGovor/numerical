@@ -19,33 +19,54 @@ const fns = {};
 fns.mod = Math.abs;
 
 fns.maxItem = (matrix) => {
-  const res = { i: 0, j: 0, koff: 0 };
+  const res = { iN: 0, jN: 0, num: 0 };
 
   for (let i = 0; i < matrix.length; i++) {
     const max = matrix[i].reduce((a, b) => 
     fns.mod(a) > fns.mod(b) ? a : b);
     
-    if (max > res.koff) {
-      res.koff = max;
-      res.j = i;
+    if (max > res.num) {
+      res.num = max;
+      res.iN = i;
     };
   }
 
-  res.i = matrix[res.j].indexOf(res.koff);
+  res.jN = matrix[res.jN].indexOf(res.num);
   
   return res;
 };
 
-const gauss = (matrix, vector) => {
-  const length = matrix.length;
-  console.log(length);
-
-
-  for (let i = 0; i < length; i++) {
-
+fns.matrixCopy = (matrix) => {
+  const mat = matrix.slice();
+  for(let i = 0; i < matrix.length; i++) {
+    mat[i] = mat[i].slice();
   }
+
+  return mat;
 };
 
+const gauss = (matrix, vector) => {
+  const mat = fns.matrixCopy(matrix);
+  const length = mat.length;
+  const { iN, jN, num } = fns.maxItem(mat);
+  const mainLine = mat[iN];
 
-console.log(fns.maxItem(matrixA));
+  for (let i = 0; i < length; i++) {
+    mainLine[i] = mainLine[i] / num;
+  }
+
+  for (let i = 0; i < length; i++) {
+    if (i === iN) continue;
+    const koff = mat[i][0];
+    const copyML = mainLine.slice().map(x => x * koff);
+    for (let j = 0; j < length; j++) {
+      mat[i][j] = mat[i][j] - copyML[j];
+    }
+
+  }
+
+  console.log(mat);
+
+};
+
 gauss(matrixA);
