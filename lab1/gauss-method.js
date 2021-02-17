@@ -45,6 +45,20 @@ fns.matrixCopy = (matrix) => {
   return mat;
 };
 
+fns.swapRows = (matrix, row1, row2) => {
+  const copyRow1 = matrix[row1];
+  matrix[row1] = matrix[row2];
+  matrix[row2] = copyRow1;
+};
+
+fns.swapCols = (matrix, col1, col2) => {
+  for (let i = 0; i < length; i++) {
+    const copyItem = matrix[i][col1];
+    matrix[i][col1] = matrix[i][col2];
+    matrix[i][col2] = copyItem;
+  }
+};
+
 const gauss = (matrix, vector) => {
   const mat = fns.matrixCopy(matrix);
   const length = mat.length;
@@ -69,9 +83,7 @@ const gauss = (matrix, vector) => {
       }
 
     }
-
     console.log(mat);
-
   }
 
 };
