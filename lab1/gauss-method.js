@@ -109,10 +109,11 @@ const gauss = (matrix, vector) => {
   console.log(mat[0]);
   console.log(mat[1]);
   console.log(mat[2]);
+  console.log(mat[3]);
   console.log('\\');
   console.log(vec);
   }
 };
 
-console.log(matrix);
-gauss(matrix, vector);
+console.log(matrixA);
+gauss(matrixA, vectorB);
