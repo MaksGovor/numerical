@@ -1,24 +1,14 @@
 'use strict';
 
-const matrixA = [
-  [ 3.81, 0.25, 1.28, 3.75 ],
-  [ 2.25, 1.32, 7.58, 0.49 ],
-  [ 5.31, 9.28, 0.98, 1.04 ],
-  [ 12.39, 2.45, 3.35, 2.28 ],
-];
-
-const vectorB = [
-  4.21,
-  9.47,
-  2.38,
-  13.48,
-];
+const fns = require('./fns');
+const logger = require('./logger');
+const  {matrixA, vectorB } = require('./task.json');
 
 const matrix = [
-  [1, 2, 8, 6],
+  [1, 2, 0, 6],
   [56, 12, 1, 65],
-  [12, 43, 11, 23],
-  [5, 4, 6, 1]
+  [12, 43, 0, 23],
+  [5, 0, 6, 1]
 ];
 
 const vector = [
@@ -28,59 +18,16 @@ const vector = [
   3
 ]
 
-const fns = {};
-
-fns.mod = Math.abs;
-
-fns.maxItem = (matrix, from) => {
-  const res = { iN: 0, jN: 0, num: 0 };
-
-  for (let i = from; i < matrix.length; i++) {
-    const max = matrix[i].reduce((a, b) =>
-      (fns.mod(a) > fns.mod(b) ? a : b));
-
-    if (fns.mod(max) > fns.mod(res.num)) {
-      res.num = max;
-      res.iN = i;
-    }
-  }
-
-  res.jN = matrix[res.iN].indexOf(res.num);
-
-  return res;
-};
-
-fns.matrixCopy = (matrix) => {
-  const mat = matrix.slice();
-  for (let i = 0; i < matrix.length; i++) {
-    mat[i] = mat[i].slice();
-  }
-
-  return mat;
-};
-
-fns.swapRows = (matrix, row1, row2) => {
-  if (row1 === row2) return;
-  console.log(`ROWS: ${row1}<->${row2}`);
-  const copyRow1 = matrix[row1];
-  matrix[row1] = matrix[row2];
-  matrix[row2] = copyRow1;
-};
-
-fns.swapCols = (matrix, col1, col2) => {
-  if (col1 === col2) return;
-  console.log(`COLS: ${col1}<->${col2}`);
-  for (let i = 0; i < matrix.length; i++) {
-    const copyItem = matrix[i][col1];
-    matrix[i][col1] = matrix[i][col2];
-    matrix[i][col2] = copyItem;
-  }
-};
-
 const gauss = (matrix, vector) => {
   const mat = fns.matrixCopy(matrix);
   const vec = vector.slice();
   const length = mat.length;
+  const matP = [
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1]
+  ]
   const continues = [];
 
   for (let q = 0; q < length; q++) {
@@ -88,6 +35,7 @@ const gauss = (matrix, vector) => {
     console.log({ iN, jN, q, num });
     fns.swapRows(mat, iN, q);
     fns.swapRows(vec, iN, q);
+    fns.swapRows(matP, jN, q);
     fns.swapCols(mat, jN, q);
     iN = q;
     const mainLine = mat[iN];
@@ -117,7 +65,24 @@ const gauss = (matrix, vector) => {
   console.log(vec);
   }
 
+  const last = length - 1;
+
+  const result = new Array(last);
+  result.push(vec[last]);
   
+  console.log('----------------------Reverse-----------------------------');
+
+  for (let i = last - 1; i >= 0 ; i--) {
+    let sum = 0;
+    for (let j = i + 1; j <= last; j++) {
+      sum += mat[i][j] * result[j];
+      console.dir({i, j, element: mat[i][j]});
+    }
+    result[i] = vec[i] - sum;
+  }
+
+  const out = fns.multipyMatrix(matP, result.map(x => [x]));
+  console.log(out);
 };
 
 console.log(matrix);
