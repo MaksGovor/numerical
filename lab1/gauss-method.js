@@ -15,17 +15,17 @@ const vectorB = [
 ];
 
 const matrix = [
-  [2, 5, 4, 1],
-  [1, 3, 2, 1],
-  [2, 10, 9, 7],
-  [3, 8, 9, 2]
+  [1, 2, 8, 6],
+  [56, 12, 1, 65],
+  [12, 43, 11, 23],
+  [5, 4, 6, 1]
 ];
 
 const vector = [
-  20,
-  11,
-  40,
-  37
+  1,
+  76,
+  5,
+  3
 ]
 
 const fns = {};
@@ -103,7 +103,6 @@ const gauss = (matrix, vector) => {
       const koff = mat[i][q];
       const copyML = mainLine.slice().map((x) => x * koff);
       vec[i] = vec[i] - vec[iN] * koff;
-      console.dir({copyML, r: mat[i]});
 
       for (let j = q; j < length; j++) {
         mat[i][j] = mat[i][j] - copyML[j];
@@ -117,6 +116,8 @@ const gauss = (matrix, vector) => {
   console.log('\\');
   console.log(vec);
   }
+
+  
 };
 
 console.log(matrix);
