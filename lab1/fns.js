@@ -33,7 +33,6 @@ fns.matrixCopy = (matrix) => {
 
 fns.swapRows = (matrix, row1, row2) => {
   if (row1 === row2) return;
-  console.log(`ROWS: ${row1}<->${row2}`);
   const copyRow1 = matrix[row1];
   matrix[row1] = matrix[row2];
   matrix[row2] = copyRow1;
@@ -41,7 +40,6 @@ fns.swapRows = (matrix, row1, row2) => {
 
 fns.swapCols = (matrix, col1, col2) => {
   if (col1 === col2) return;
-  console.log(`COLS: ${col1}<->${col2}`);
   for (let i = 0; i < matrix.length; i++) {
     const copyItem = matrix[i][col1];
     matrix[i][col1] = matrix[i][col2];
@@ -75,6 +73,13 @@ fns.get1Matrix = (size) => {
     }
   }
   return matrix;
+};
+
+fns.gaussSwap = (mat, vec, matP, iN, jN, q) => {
+  fns.swapRows(mat, iN, q);
+  fns.swapRows(vec, iN, q);
+  fns.swapRows(matP, jN, q);
+  fns.swapCols(mat, jN, q);
 }
 
 module.exports = fns;

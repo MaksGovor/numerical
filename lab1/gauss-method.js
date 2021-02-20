@@ -2,88 +2,61 @@
 
 const fns = require('./fns');
 const logger = require('./logger');
-const  {matrixA, vectorB } = require('./task.json');
+const  { matrixA, vectorB } = require('./task.json');
 
-const matrix = [
-  [1, 2, 0, 6],
-  [56, 12, 1, 65],
-  [12, 43, 0, 23],
-  [5, 0, 6, 1]
-];
+const eliminateDown = (mat, vec, matP, length) => {
+  const passed = [];
 
-const vector = [
-  1,
-  76,
-  5,
-  3
-]
+  for (let q = 0; q < length; q++) {
+    let { iN, jN, num } = fns.maxItem(mat, q);
+    fns.gaussSwap(mat, vec, matP, iN, jN, q);
+    iN = q;
+    const mainLine = mat[iN];
+    passed.push(iN);
+    vec[iN] /= num;
+
+    for (let i = 0; i < length; i++) mainLine[i] /= num;
+
+    for (let i = q; i < length; i++) {
+      if (passed.includes(i)) continue;
+      const koff = mat[i][q];
+      const copyML = mainLine.slice().map((x) => x * koff);
+      vec[i] -= vec[iN] * koff;
+
+      for (let j = q; j < length; j++) {
+        mat[i][j] -= copyML[j];
+      }
+    }
+    logger.matrixLog(mat, `Matrix iteration: ${q}`);
+    logger.matrixLog(vec);
+  }
+};
 
 const gauss = (matrix, vector) => {
   const mat = fns.matrixCopy(matrix);
   const vec = vector.slice();
   const length = mat.length;
-  const matP = [
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1]
-  ]
-  const continues = [];
-
-  for (let q = 0; q < length; q++) {
-    let { iN, jN, num } = fns.maxItem(mat, q);
-    console.log({ iN, jN, q, num });
-    fns.swapRows(mat, iN, q);
-    fns.swapRows(vec, iN, q);
-    fns.swapRows(matP, jN, q);
-    fns.swapCols(mat, jN, q);
-    iN = q;
-    const mainLine = mat[iN];
-    continues.push(iN);
-
-    vec[iN] = vec[iN] / num;
-    for (let i = 0; i < length; i++) {
-      mainLine[i] = mainLine[i] / num;
-    }
-
-    for (let i = q; i < length; i++) {
-      if (continues.includes(i)) continue;
-      const koff = mat[i][q];
-      const copyML = mainLine.slice().map((x) => x * koff);
-      vec[i] = vec[i] - vec[iN] * koff;
-
-      for (let j = q; j < length; j++) {
-        mat[i][j] = mat[i][j] - copyML[j];
-      }
-    }
-  console.log('/');
-  console.log(mat[0]);
-  console.log(mat[1]);
-  console.log(mat[2]);
-  console.log(mat[3]);
-  console.log('\\');
-  console.log(vec);
-  }
-
   const last = length - 1;
+  const xVec = new Array(last);
+  const matP = fns.get1Matrix(length);
 
-  const result = new Array(last);
-  result.push(vec[last]);
-  
-  console.log('----------------------Reverse-----------------------------');
+  logger.dRun();
+  logger.matrixLog(mat, 'Before iteration');
+  logger.matrixLog(vec);
+  eliminateDown(mat, vec, matP, length);
 
-  for (let i = last - 1; i >= 0 ; i--) {
+  xVec.push(vec[last]);
+  for (let i = last - 1; i >= 0; i--) {
     let sum = 0;
     for (let j = i + 1; j <= last; j++) {
-      sum += mat[i][j] * result[j];
-      console.dir({i, j, element: mat[i][j]});
+      sum += mat[i][j] * xVec[j];
     }
-    result[i] = vec[i] - sum;
+    xVec[i] = vec[i] - sum;
   }
 
-  const out = fns.multipyMatrix(matP, result.map(x => [x]));
-  console.log(out);
+  const out = fns.multipyMatrix(matP, xVec.map((x) => [x]));
+  logger.matrixLog(out, 'Result');
+  return out;
 };
 
-console.log(matrix);
-gauss(matrix, vector);
+gauss(matrixA, vectorB);
