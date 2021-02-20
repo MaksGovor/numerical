@@ -15,25 +15,27 @@ const vectorB = [
 ];
 
 const matrix = [
-  [1, 2, -1],
-  [2, -1, 3],
-  [3, 2, -5],
+  [2, 5, 4, 1],
+  [1, 3, 2, 1],
+  [2, 10, 9, 7],
+  [3, 8, 9, 2]
 ];
 
 const vector = [
-  1,
-  2,
-  3,
+  20,
+  11,
+  40,
+  37
 ]
 
 const fns = {};
 
 fns.mod = Math.abs;
 
-fns.maxItem = (matrix) => {
+fns.maxItem = (matrix, from) => {
   const res = { iN: 0, jN: 0, num: 0 };
 
-  for (let i = 0; i < matrix.length; i++) {
+  for (let i = from; i < matrix.length; i++) {
     const max = matrix[i].reduce((a, b) =>
       (fns.mod(a) > fns.mod(b) ? a : b));
 
@@ -82,7 +84,7 @@ const gauss = (matrix, vector) => {
   const continues = [];
 
   for (let q = 0; q < length; q++) {
-    let { iN, jN, num } = fns.maxItem(mat);
+    let { iN, jN, num } = fns.maxItem(mat, q);
     console.log({ iN, jN, q, num });
     fns.swapRows(mat, iN, q);
     fns.swapRows(vec, iN, q);
@@ -101,6 +103,8 @@ const gauss = (matrix, vector) => {
       const koff = mat[i][q];
       const copyML = mainLine.slice().map((x) => x * koff);
       vec[i] = vec[i] - vec[iN] * koff;
+      console.dir({copyML, r: mat[i]});
+
       for (let j = q; j < length; j++) {
         mat[i][j] = mat[i][j] - copyML[j];
       }
@@ -115,5 +119,5 @@ const gauss = (matrix, vector) => {
   }
 };
 
-console.log(matrixA);
-gauss(matrixA, vectorB);
+console.log(matrix);
+gauss(matrix, vector);
