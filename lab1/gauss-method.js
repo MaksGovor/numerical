@@ -45,6 +45,7 @@ const gauss = (matrix, vector) => {
   logger.matrixLog(vec);
   eliminateDown(mat, vec, matP, length);
 
+  logger.rRun();
   xVec.push(vec[last]);
   for (let i = last - 1; i >= 0; i--) {
     let sum = 0;

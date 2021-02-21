@@ -1,9 +1,15 @@
 'use strict';
 
-const logger = {};
+const logger = {
+  tab: `${'-'.repeat(10)}`
+};
+
+logger.log = function (str) {
+  console.log(`${this.tab + str + this.tab}`);
+}
 
 logger.dRun = () => {
-  console.log(`${'-'.repeat(10)}Direct course${'-'.repeat(10)}`);
+  logger.log('Direct course');
 }
 
 logger.matrixLog = (matrix, str) => {
@@ -11,5 +17,8 @@ logger.matrixLog = (matrix, str) => {
   console.table(matrix);
 }
 
+logger.rRun = () => {
+  logger.log('Reverse course');
+}
 
 module.exports = logger;
