@@ -49,9 +49,9 @@ fns.swapCols = (matrix, col1, col2) => {
 
 fns.multipyMatrix = (mat1, mat2) => {
   const rowsA = mat1.length, colsA = mat1[0].length,
-      rowsB = mat2.length, colsB = mat2[0].length;
+    rowsB = mat2.length, colsB = mat2[0].length;
   const res = [];
-  if (colsA != rowsB) return false;
+  if (colsA !== rowsB) return false;
   for (let i = 0; i < rowsA; i++) res[i] = [];
   for (let k = 0; k < colsB; k++) {
     for (let i = 0; i < rowsA; i++) {
@@ -66,9 +66,9 @@ fns.multipyMatrix = (mat1, mat2) => {
 fns.get1Matrix = (size) => {
   const matrix = new Array(size)
     .fill(new Array(size).fill(0));
-  for(let i = 0; i < size; i++) {
+  for (let i = 0; i < size; i++) {
     matrix[i] = matrix[i].slice();
-    for(let j = 0; j < size; j++) {
+    for (let j = 0; j < size; j++) {
       if (i === j) matrix[i][j] = 1;
     }
   }
@@ -80,6 +80,6 @@ fns.gaussSwap = (mat, vec, matP, iN, jN, q) => {
   fns.swapRows(vec, iN, q);
   fns.swapRows(matP, jN, q);
   fns.swapCols(mat, jN, q);
-}
+};
 
 module.exports = fns;

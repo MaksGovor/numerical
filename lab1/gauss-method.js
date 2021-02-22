@@ -8,7 +8,9 @@ const eliminateDown = (mat, vec, matP, length) => {
   const passed = [];
 
   for (let q = 0; q < length; q++) {
-    let { iN, jN, num } = fns.maxItem(mat, q);
+    const maxInfo = fns.maxItem(mat, q);
+    let { iN } = maxInfo;
+    const { jN, num } = maxInfo;
     fns.gaussSwap(mat, vec, matP, iN, jN, q);
     iN = q;
     const mainLine = mat[iN];
@@ -59,5 +61,7 @@ const gauss = (matrix, vector) => {
   logger.matrixLog(out, 'Result');
   return out;
 };
+
+
 
 gauss(matrixA, vectorB);
