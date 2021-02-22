@@ -58,10 +58,18 @@ const gauss = (matrix, vector) => {
   }
 
   const out = fns.multipyMatrix(matP, xVec.map((x) => [x]));
-  logger.matrixLog(out, 'Result');
   return out;
 };
 
+const residualVector = (matrix, vector, result) => {
+  const expected = fns.multipyMatrix(matrix, result)
+    .map(([x]) => -1 * x);
+  const out = fns.sumVector(vector, expected);
+  return out;
+};
 
+const res = gauss(matrixA, vectorB);
+const residual = residualVector(matrixA, vectorB, res);
 
-gauss(matrixA, vectorB);
+logger.matrixLog(res, 'Result');
+logger.matrixLog(residual, 'Residual vector');

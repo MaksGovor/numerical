@@ -75,6 +75,16 @@ fns.get1Matrix = (size) => {
   return matrix;
 };
 
+fns.sumVector = (vec1, vec2) =>  {
+  const len1 = vec1.length, len2 = vec2.length;
+  if (len1 !== len2) return false;
+  const res = [];
+  for (let i = 0; i < len1; i++) {
+    res[i] = vec1[i] + vec2[i];
+  }
+  return res;
+};
+
 fns.gaussSwap = (mat, vec, matP, iN, jN, q) => {
   fns.swapRows(mat, iN, q);
   fns.swapRows(vec, iN, q);
