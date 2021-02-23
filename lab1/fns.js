@@ -4,6 +4,14 @@ const fns = {};
 
 fns.mod = Math.abs;
 
+fns.roundPlus = (accuracy, num) => {
+  if (isNaN(num) || isNaN(accuracy)) return false;
+  const m = Math.pow(10, accuracy);
+  return Math.round(num * m) / m;
+};
+
+fns.partial = (fn, ...args) => (...rest) => fn(...args, ...rest);
+
 fns.maxItem = (matrix, from) => {
   const res = { iN: 0, jN: 0, num: 0 };
 
