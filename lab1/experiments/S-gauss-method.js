@@ -1,8 +1,9 @@
 'use strict';
 
-const fns = require('./fns');
-const logger = require('./logger');
-const  { matrixA, vectorB } = require('./task.json');
+const fns = require('./../fns');
+const logger = require('./../logger');
+const  { matrixA, vectorB } = require('./../task.json');
+const roundTo6 = fns.partial(fns.significantRound, 6);
 
 const eliminateDown = (mat, vec, matP, length) => {
   const passed = [];
@@ -15,9 +16,14 @@ const eliminateDown = (mat, vec, matP, length) => {
     iN = q;
     const mainLine = mat[iN];
     passed.push(iN);
-    vec[iN] /= num;
 
-    for (let i = 0; i < length; i++) mainLine[i] /= num;
+    const vecDiv = vec[iN] / num;
+    vec[iN] = roundTo6(vecDiv);
+
+    for (let i = 0; i < length; i++) {
+      const itemDiv = mainLine[i] / num;
+      mainLine[i] = roundTo6(itemDiv);
+    }
 
     for (let i = q; i < length; i++) {
       if (passed.includes(i)) continue;
@@ -26,7 +32,8 @@ const eliminateDown = (mat, vec, matP, length) => {
       vec[i] -= vec[iN] * koff;
 
       for (let j = q; j < length; j++) {
-        mat[i][j] -= copyML[j];
+        const itemMins = mat[i][j] - copyML[j];
+        mat[i][j] = roundTo6(itemMins);
       }
     }
     logger.matrixLog(mat, `Matrix iteration: ${q}`);
@@ -58,7 +65,7 @@ const gauss = (matrix, vector) => {
   }
 
   const out = fns.multipyMatrix(matP, xVec.map((x) => [x]));
-  const qq = out.map(([x]) => [fns.significantRound(6, x)]);
+  const qq = out.map(([x]) => [roundTo6(x)]);
   return qq;
 };
 

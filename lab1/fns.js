@@ -13,6 +13,7 @@ fns.roundPlus = (accuracy, num) => {
 
 fns.significantRound = (accuracy, num) => {
   const strNum = num.toString().split('.')[1];
+  if (!strNum) return num;
   let acc = 0;
   for (const s of strNum) {
     if (s !== '0') break;
