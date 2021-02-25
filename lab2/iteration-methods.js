@@ -27,6 +27,13 @@ const bringMatrix = (matrix, vector) => {
   return { matR, vecR: vecR.map((x) => [x]) };
 };
 
+const residualVector = (matrix, vector, result) => {
+  const expected = fns.multipyMatrix(matrix, result)
+    .map(([x]) => [-1 * x]);
+  const out = fns.sumVector(vector.map((x) => [x]), expected);
+  return out;
+};
+
 const jacobi = (matrix, vector, eps) => {
   const { matR, vecR } = bringMatrix(matrix, vector);
   let res = fns.matrixCopy(vecR);
@@ -42,10 +49,12 @@ const jacobi = (matrix, vector, eps) => {
     res = resN;
   }
 
-  res = res.map(([x]) => roundTo6(x));
+  res = res.map(([x]) => [roundTo6(x)]);
   return res;
 };
 
 const res = jacobi(matrixA, vectorB, eps);
+const residual = residualVector(matrixA, vectorB, res);
 
 logger.matrixLog(res, 'Result');
+logger.matrixLog(residual, 'Residual vector');
