@@ -53,8 +53,35 @@ const jacobi = (matrix, vector, eps) => {
   return res;
 };
 
-const res = jacobi(matrixA, vectorB, eps);
-const residual = residualVector(matrixA, vectorB, res);
+const seidel = (matrix, vector, eps) => {
+  const { matR, vecR } = bringMatrix(matrix, vector);
+  const len = matR.length;
+  let res = fns.matrixCopy(vecR);
 
-logger.matrixLog(res, 'Result');
-logger.matrixLog(residual, 'Residual vector');
+  for (let k = 0; ; k++) {
+    const resN = fns.matrixCopy(res);
+    for (let i = 0; i < len; i++) {
+      let t = 0;
+      for (let j = 0; j < len; j++) {
+        t += matR[i][j] * resN[j][0];
+      }
+      resN[i][0] = t + vecR[i][0];
+    }
+
+    const errs = fns.subByModVector(resN, res);
+    if (errs.every(([x]) => x < eps)) {
+      logger.log(`End in ${k} iteration`);
+      break;
+    }
+    res = resN;
+  }
+
+  res = res.map(([x]) => [roundTo6(x)]);
+  return res;
+};
+
+const res1 = jacobi(matrixA, vectorB, eps);
+logger.matrixLog(res1, 'Result Jacobi');
+
+const res2 = seidel(matrixA, vectorB, eps);
+logger.matrixLog(res2, 'Result Seidel');
