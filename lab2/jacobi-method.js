@@ -1,7 +1,10 @@
 'use strict';
 
 const fns = require('./fns');
-const { matrixA, vectorB } = require('./task.json');
+const logger = require('./logger');
+const { matrixA, vectorB, accuracy } = require('./task.json');
+const eps = 10 ** (-accuracy);
+const roundTo6 = fns.partial(fns.significantRound, accuracy);
 
 const bringMatrix = (matrix, vector) => {
   const len = matrix.length;
@@ -21,17 +24,28 @@ const bringMatrix = (matrix, vector) => {
     }
   }
 
-  return { matR, vecR };
+  return { matR, vecR: vecR.map((x) => [x]) };
 };
 
-const jacobi = (matrix, vector) => {
-  const mat = fns.matrixCopy(matrix);
-  const vec = vector.slice();
+const jacobi = (matrix, vector, eps) => {
+  const { matR, vecR } = bringMatrix(matrix, vector);
+  let res = fns.matrixCopy(vecR);
 
-  console.log(mat, vec);
+  for (let i = 0; ; i++) {
+    const rightP = fns.multipyMatrix(matR, res);
+    const resN = fns.sumVector(rightP, vecR);
+    const errs = fns.subByModVector(resN, res);
+    if (errs.every(([x]) => x < eps)) {
+      logger.log(`End in ${i} iteration`);
+      break;
+    }
+    res = resN;
+  }
+
+  res = res.map(([x]) => roundTo6(x));
+  return res;
 };
 
-const a = bringMatrix(matrixA, vectorB);
+const res = jacobi(matrixA, vectorB, eps);
 
-console.table(a.matR);
-console.table(a.vecR);
+logger.matrixLog(res, 'Result');
