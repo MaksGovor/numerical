@@ -18,7 +18,6 @@ const eliminateDown = (mat, vec, matP, length) => {
     const vecIn = vec[iN] / num;
     passed.push(iN);
 
-
     for (let i = 0; i < length; i++) mainLine[i] /= num;
 
     for (let i = q; i < length; i++) {
