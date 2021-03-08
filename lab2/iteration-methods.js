@@ -83,5 +83,5 @@ const seidel = (matrix, vector, eps) => {
 const res1 = jacobi(matrixA, vectorB, eps);
 logger.matrixLog(res1, 'Result Jacobi');
 
-// const res2 = seidel(matrixA, vectorB, eps);
-// logger.matrixLog(res2, 'Result Seidel');
+const res2 = seidel(matrixA, vectorB, eps);
+logger.matrixLog(res2, 'Result Seidel');
