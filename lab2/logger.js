@@ -8,12 +8,10 @@ const logger = {
   red: '\x1b[1;31m' // Bold
 };
 
-logger.log = function(str) {
-  console.log(`${this.tab + str + this.tab}`);
-};
-
-logger.dRun = function() {
-  logger.log(`${this.green}Direct course${this.white}`);
+logger.log = function(str, color) {
+  let out = `${this.tab + str + this.tab}`;
+  if (color) out = color + out + logger.white;
+  console.log(out);
 };
 
 logger.matrixLog = function(matrix, str) {
@@ -21,8 +19,19 @@ logger.matrixLog = function(matrix, str) {
   console.table(matrix);
 };
 
-logger.rRun = function() {
-  this.log(`${this.red}Reverse course${this.white}`);
+logger.residualLog = function(vectors) {
+  for (let i = 0; i < vectors.length; i++) {
+    console.log(`${this.white}Residual vector iteration ${i}: [${
+      this.blue + vectors[i].join(', ') + this.white
+    }]`);
+  }
+};
+
+logger.iterateTables = function(tables) {
+  for (const table of tables) {
+    const index = tables.indexOf(table);
+    if (index !== -1) this.matrixLog(table, `Vector x iteration ${index}`);
+  }
 };
 
 module.exports = logger;

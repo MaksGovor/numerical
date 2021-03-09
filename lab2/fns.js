@@ -33,13 +33,6 @@ fns.matrixCopy = (matrix) => {
   return mat;
 };
 
-fns.swapRows = (matrix, row1, row2) => {
-  if (row1 === row2) return;
-  const copyRow1 = matrix[row1];
-  matrix[row1] = matrix[row2];
-  matrix[row2] = copyRow1;
-};
-
 fns.multipyMatrix = (mat1, mat2) => {
   const rowsA = mat1.length, colsA = mat1[0].length,
     rowsB = mat2.length, colsB = mat2[0].length;
