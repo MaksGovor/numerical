@@ -6,5 +6,10 @@ const { matrixA } = require('./task.json');
 
 
 const danilevsky = (matrix) => {
-
+  const len = matrix.length - 1;
+  const res = [];
+  for (let i = len; i >= 0; i--) {
+    
+  }
 };
+
