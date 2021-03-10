@@ -25,4 +25,20 @@ fns.get1Matrix = (size) => {
   return matrix;
 };
 
+fns.multipyMatrix = (mat1, mat2) => {
+  const rowsA = mat1.length, colsA = mat1[0].length,
+    rowsB = mat2.length, colsB = mat2[0].length;
+  const res = [];
+  if (colsA !== rowsB) return false;
+  for (let i = 0; i < rowsA; i++) res[i] = [];
+  for (let k = 0; k < colsB; k++) {
+    for (let i = 0; i < rowsA; i++) {
+      let t = 0;
+      for (let j = 0; j < rowsB; j++) t += mat1[i][j] * mat2[j][k];
+      res[i][k] = t;
+    }
+  }
+  return res;
+};
+
 module.exports = fns;
