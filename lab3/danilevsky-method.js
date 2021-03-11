@@ -1,6 +1,5 @@
 'use strict';
 
-const { subByModVector } = require('./fns');
 const fns = require('./fns');
 const logger = require('./logger');
 const { matrixA, eigenvalues } = require('./task.json');
@@ -83,4 +82,5 @@ const eigenvectors = findEigenvectors(eigenvalues, matrixS);
 logger.eigenvectorsLog(eigenvectors, eigenvalues);
 
 // Compare result
+logger.log('Compare results', logger.red);
 compareResults(matrixA, eigenvalues, eigenvectors);
