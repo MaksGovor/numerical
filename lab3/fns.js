@@ -41,4 +41,14 @@ fns.multipyMatrix = (mat1, mat2) => {
   return res;
 };
 
+fns.roundMins = (matrix, iter) => {
+  const rounded = [];
+  for (let i = 0; i < matrix.length; i++) {
+    if (i >= iter) {
+      rounded[i] = matrix[i].map(Math.round);
+    } else rounded[i] = matrix[i].slice();
+  }
+  return rounded;
+};
+
 module.exports = fns;

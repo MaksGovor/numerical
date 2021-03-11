@@ -23,14 +23,15 @@ const danilevsky = (matrix) => {
 
     const mr = fns.multipyMatrix(multiplierInv, res);
     res = fns.multipyMatrix(mr, multiplier);
-    res[i] = res[i].map(Math.round);
+    //res[i] = res[i].map(Math.round);
 
     logger.log('-'.repeat(80), logger.green);
     logger.matrixLog(multiplier, `Matrix M${i}`);
     logger.matrixLog(multiplierInv, `Matrix (M${i})⁻¹`);
-    logger.matrixLog(res, `Matrix P${i}`);
+    logger.matrixLog(fns.roundMins(res, i), `Matrix P${i}`);
   }
 
+  res = fns.roundMins(res, 1);
   return { res, mulipS };
 };
 
