@@ -19,18 +19,10 @@ logger.matrixLog = function(matrix, str) {
   console.table(matrix);
 };
 
-logger.residualLog = function(vectors) {
-  for (let i = 0; i < vectors.length; i++) {
-    console.log(`${this.white}Residual vector iteration ${i}: [${
-      this.blue + vectors[i].join(', ') + this.white
-    }]`);
-  }
-};
-
-logger.iterateTables = function(tables) {
-  for (const table of tables) {
-    const index = tables.indexOf(table);
-    if (index !== -1) this.matrixLog(table, `Vector x iteration ${index}`);
+logger.eigenvectorsLog = function(eigenvectors, eigenvalues) {
+  for (let i = 0; i < eigenvalues.length; i++) {
+    this.matrixLog(eigenvectors[i],
+      `Eigenvalue: ${eigenvalues[i]}; eigenvector:`);
   }
 };
 

@@ -2,8 +2,7 @@
 
 const fns = require('./fns');
 const logger = require('./logger');
-const { matrixA } = require('./task.json');
-
+const { matrixA, eigenvalues } = require('./task.json');
 
 const danilevsky = (matrix) => {
   const len = matrix.length;
@@ -35,6 +34,22 @@ const danilevsky = (matrix) => {
   return { res, mulipS };
 };
 
+const findEigenvectors = (eigenvalues, matrixS) => {
+  const quantity = eigenvalues.length;
+  const len = matrixS.length - 1;
+  const vectors = [];
+
+  for (let i = 0; i < quantity; i++) {
+    vectors[i] = [];
+    for (let k = 0; k <= len; k++) {
+      vectors[i][len - k] = eigenvalues[i] ** k;
+    }
+
+    vectors[i] = fns.multipyMatrix(matrixS, vectors[i].map((x) => [x]))
+  }
+
+  return vectors;
+};
 
 // Log task
 logger.log('TASK', logger.red);
@@ -46,3 +61,6 @@ const { res, mulipS } = danilevsky(matrixA);
 
 const matrixS = mulipS.reduce(fns.multipyMatrix);
 logger.matrixLog(matrixS, 'Matrix S');
+
+const eigenvectors = findEigenvectors(eigenvalues, matrixS);
+logger.eigenvectorsLog(eigenvectors, eigenvalues);
