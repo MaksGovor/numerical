@@ -60,7 +60,7 @@ const compareResults = (matrix, eigenvalues, eigenvectors) => {
     const lv = eigenvectors[i].map(([x]) => [x * eigenvalues[i]]);
     const sub = fns.subByModVector(mv, lv);
     logger.matrixLog({
-      'A⋅x': mv, 'λ⋅x': lv, 'A⋅x - λ⋅x': sub
+      'A⋅x': mv, 'λ⋅x': lv, '|A⋅x - λ⋅x|': sub
     }, `Compare for ${eigenvalues[i]}`);
   }
 };
