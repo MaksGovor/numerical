@@ -1,5 +1,6 @@
 'use strict';
 
+const { subByModVector } = require('./fns');
 const fns = require('./fns');
 const logger = require('./logger');
 const { matrixA, eigenvalues } = require('./task.json');
@@ -46,10 +47,23 @@ const findEigenvectors = (eigenvalues, matrixS) => {
       vectors[i][len - k] = eigenvalues[i] ** k;
     }
 
-    vectors[i] = fns.multipyMatrix(matrixS, vectors[i].map((x) => [x]))
+    vectors[i] = fns.multipyMatrix(matrixS, vectors[i].map((x) => [x]));
   }
 
   return vectors;
+};
+
+const compareResults = (matrix, eigenvalues, eigenvectors) => {
+  const len = eigenvalues.length;
+
+  for (let i = 0; i < len; i++) {
+    const mv = fns.multipyMatrix(matrix, eigenvectors[i]);
+    const lv = eigenvectors[i].map(([x]) => [x * eigenvalues[i]]);
+    const sub = fns.subByModVector(mv, lv);
+    logger.matrixLog({
+      'A⋅x': mv, 'λ⋅x': lv, 'A⋅x - λ⋅x': sub
+    }, `Compare for ${eigenvalues[i]}`);
+  }
 };
 
 // Log task
@@ -58,10 +72,15 @@ logger.matrixLog(matrixA, 'Matrix A');
 
 // Log solution
 logger.log('SOLUTION', logger.red);
-const { res, mulipS } = danilevsky(matrixA);
+const { mulipS } = danilevsky(matrixA);
 
+// Preparing matrixS
 const matrixS = mulipS.reduce(fns.multipyMatrix);
 logger.matrixLog(matrixS, 'Matrix S');
 
+// Find eigenvectors
 const eigenvectors = findEigenvectors(eigenvalues, matrixS);
 logger.eigenvectorsLog(eigenvectors, eigenvalues);
+
+// Compare result
+compareResults(matrixA, eigenvalues, eigenvectors);

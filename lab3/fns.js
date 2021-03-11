@@ -51,4 +51,22 @@ fns.roundMins = (matrix, iter) => {
   return rounded;
 };
 
+fns.sumVector = (vec1, vec2) =>  {
+  const len1 = vec1.length, len2 = vec2[0].length;
+  const res = [];
+  for (let i = 0; i < len1; i++) {
+    res[i] = [];
+    for (let j = 0; j < len2; j++) {
+      res[i][j] =  vec1[i][j] + vec2[i][j];
+    }
+  }
+  return res;
+};
+
+fns.subByModVector = (vec1, vec2) => {
+  const mVec2 = vec2.map(([x]) => [-x]);
+  const sub = fns.sumVector(vec1, mVec2);
+  return sub.map(([x]) => [fns.mod(x)]);
+};
+
 module.exports = fns;
