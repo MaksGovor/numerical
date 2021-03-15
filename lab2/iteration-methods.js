@@ -82,7 +82,6 @@ const seidel = (matrix, vector, eps) => {
       logger.log(`Seidel end ${k} iteration`);
       break;
     }
-
   }
 
   res = res.map(([x]) => [roundTo6(x)]);
@@ -111,4 +110,3 @@ logger.log('SEIDEL METHOD', logger.red);
 const resS = seidel(matrixAd, vectorBd, eps);
 logger.matrixLog(resS, 'Result Seidel');
 logger.matrixLog(residualVector(matrixAd, vectorBd, res), 'Residual vector');
-
