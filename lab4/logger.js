@@ -15,4 +15,9 @@ logger.log = function(str, color, tab) {
   console.log(out);
 };
 
+logger.matrixLog = function(matrix, str) {
+  if (str) this.log(this.blue + str + this.white);
+  console.table(matrix);
+};
+
 module.exports = logger;

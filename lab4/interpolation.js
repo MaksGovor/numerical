@@ -1,6 +1,7 @@
 'use strict';
 
 const { nodes } = require('./task.json');
+const { pow } = Math;
 const fns = require('./fns');
 const logger = require('./logger');
 const f = require('./interpolatedFunction');
@@ -61,14 +62,26 @@ const getIntervalsLength = (nodes) => {
 const splineMethod = (nodes, values) => {
   const xIntervals = getIntervalsLength(nodes);
   const yItnervals = getIntervalsLength(values);
-  const countOfIntervals = nodes.length - 1;
-  const matrixEquations = [];
+  const countOfIntervals = nodes.length - 1, offset = 3;
+  const countOfvars = countOfIntervals * offset;
   const vectorEquations = [];
+  const row = Array(countOfvars).fill(0);
+  const matrixEquations = Array(countOfvars);
 
   for (let i = 0; i < countOfIntervals; i++) {
-
+    matrixEquations[i] = row.slice();
+    vectorEquations[i] = yItnervals[i];
+    const localOffset = i * offset;
+    const hi = xIntervals[i];
+    const powsHi = [ hi, pow(hi, 2), pow(hi, 3) ];
+    for (let j = localOffset; j < countOfvars; j++) {
+      if (powsHi[j - localOffset]) matrixEquations[i][j] = powsHi[j - localOffset];
+      else break;
+    }
   }
 
+  logger.matrixLog(matrixEquations);
+  logger.matrixLog(vectorEquations);
 }
 
 splineMethod(nodes, functionValues);
