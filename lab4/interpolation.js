@@ -33,21 +33,48 @@ const interpolationNewton = (nodes, values) => {
 const getNewtonPolynom = (diffs, nodes, firstValue) => {
   let polynom = `f(x) ≈ ${roundTo6(firstValue)}`;
   let multiplier = ''
-  const length = nodes.length - 1;
+  const length = nodes.length - 1, plus = '+', minus = '-';
 
   for (let i = 0; i < length; i++) {
-    const sign = nodes[i] >= 0 ? '-' : '+';
+    const signNode = nodes[i] >= 0 ? minus : plus;
     const node = nodes[i] > 0 ? nodes[i]: -nodes[i];
-    multiplier += `(x ${sign} ${node})`
-    polynom += ` + ${roundTo6(diffs[i])}∙${multiplier}`
+    multiplier += `(x ${signNode} ${node})`;
+    
+    const signDiff = diffs[i] >= 0 ? plus : minus;
+    const diff = diffs[i] > 0 ? diffs[i]: -diffs[i];
+    polynom += ` ${signDiff} ${roundTo6(diff)}∙${multiplier}`
   }
 
   return polynom;
 }
 
-// Usage polynom Newton
-const separatedDiff = interpolationNewton(nodes, functionValues);
-const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+// Interpolation spline
 
-logger.log('Interpolation by the Newton method', logger.blue);
-logger.log(polynomNewton, logger.green, ' ');
+const getIntervalsLength = (nodes) => {
+  const intervalsLength = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    intervalsLength[i] = nodes[i + 1] - nodes[i];
+  }
+  return intervalsLength;
+}
+
+const splineMethod = (nodes, values) => {
+  const xIntervals = getIntervalsLength(nodes);
+  const yItnervals = getIntervalsLength(values);
+  const countOfIntervals = nodes.length - 1;
+  const matrixEquations = [];
+  const vectorEquations = [];
+
+  for (let i = 0; i < countOfIntervals; i++) {
+
+  }
+
+}
+
+splineMethod(nodes, functionValues);
+// Usage polynom Newton
+// const separatedDiff = interpolationNewton(nodes, functionValues);
+// const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+
+// logger.log('Interpolation by the Newton method', logger.blue);
+// logger.log(polynomNewton, logger.green, ' ');
