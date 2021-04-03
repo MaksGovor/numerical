@@ -21,7 +21,6 @@ const interpolationNewton = (nodes, values) => {
     for (let k = 0; k < quantityByOrder; k++) {
       const delta = (fValues[k] - fValues[k + 1]) / (nodes[k] - nodes[k + nodeStep]);
       separatedDiff[i].push(delta);
-      // console.log({ y1: fValues[k], y2: fValues[k + 1], x1: nodes[k], x2:  nodes[k + nodeStep], delta});
     };
     quantityByOrder--;
     nodeStep++;
