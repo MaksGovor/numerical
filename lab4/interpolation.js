@@ -64,10 +64,11 @@ const splineMethod = (nodes, values) => {
   const yItnervals = getIntervalsLength(values);
   const countOfIntervals = nodes.length - 1, offset = 3;
   const countOfvars = countOfIntervals * offset;
-  const vectorEquations = [];
+  const vectorEquations = Array(countOfvars).fill(0);
   const row = Array(countOfvars).fill(0);
   const matrixEquations = Array(countOfvars);
 
+  let index = 0;
   for (let i = 0; i < countOfIntervals; i++) {
     matrixEquations[i] = row.slice();
     vectorEquations[i] = yItnervals[i];
@@ -76,6 +77,32 @@ const splineMethod = (nodes, values) => {
     const powsHi = [ hi, pow(hi, 2), pow(hi, 3) ];
     for (let j = localOffset; j < countOfvars; j++) {
       if (powsHi[j - localOffset]) matrixEquations[i][j] = powsHi[j - localOffset];
+      else break;
+    }
+  }
+
+  index += countOfIntervals;
+  for (let i = 0; i < countOfIntervals - 1; i++) {
+    matrixEquations[i + index] = row.slice();
+    const localOffset = i * offset;
+    const hi = xIntervals[i];
+    const coffs = [ -1, -2 * hi, -3 * hi, 1 ];
+    for (let j = localOffset; j < countOfvars; j++) {
+      if (coffs[j - localOffset] || coffs[j - localOffset] === 0)
+        matrixEquations[i + index][j] = coffs[j - localOffset];
+      else break;
+    }
+  }
+
+  index += countOfIntervals - 1;
+  for (let i = 0; i < countOfIntervals - 1; i++) {
+    matrixEquations[i + index] = row.slice();
+    const localOffset = i * offset;
+    const hi = xIntervals[i];
+    const coffs = [ 0, -1, -3 * hi, 0, 1 ];
+    for (let j = localOffset; j < countOfvars; j++) {
+      if (coffs[j - localOffset] || coffs[j - localOffset] === 0)
+        matrixEquations[i + index][j] = coffs[j - localOffset];
       else break;
     }
   }
