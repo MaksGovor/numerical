@@ -60,11 +60,12 @@ const getIntervalsLength = (nodes) => {
 }
 
 const generateCoffs = (hi, numEquation) => {
-  const coffs = [
-    [ hi, pow(hi, 2), pow(hi, 3) ],
-    [ -1, -2 * hi, -3 * hi, 1 ],
-    [ 0, -1, -3 * hi, 0, 1 ]
-  ]
+  const coffs = {
+    '0': [ hi, pow(hi, 2), pow(hi, 3) ],
+    '1': [ -1, -2 * hi, -3 * hi, 1 ],
+    '2': [ 0, -1, -3 * hi, 0, 1 ],
+    last: [3 * hi, 1]
+  }
   return coffs[numEquation];
 }
 
@@ -75,7 +76,7 @@ const splineMethod = (nodes, values) => {
   const countOfvars = countOfIntervals * offset;
   const vectorEquations = Array(countOfvars).fill(0);
   const row = Array(countOfvars).fill(0);
-  const matrixEquations = Array(countOfvars);
+  const matrixEquations = [];
 
   const iterator = (index, intervals, numEquation) => {
     for (let i = 0; i < intervals; i++) {
@@ -89,19 +90,26 @@ const splineMethod = (nodes, values) => {
         else break;
       }
     }
-    return index + intervals;
+    return intervals;
   }
   
   let index = 0;
   for (let i = 0; i < offset; i++) {
     const count = i > 0 ? countOfIntervals - 1 : countOfIntervals;
     index += iterator(index, count, i);
+    console.log(index);
   }
 
-  for (let i = 0; i <= countOfIntervals; i++) vectorEquations[i] = yItnervals[i];
+  for (let i = 0; i < countOfIntervals; i++) vectorEquations[i] = yItnervals[i];
+  matrixEquations.push(row.slice(), row.slice());
 
+  const last = offset - 1;
+  matrixEquations[countOfvars - 2][last] = 1;
+  for (let i = last; i > 0; i--) {
+    const hn = xIntervals[countOfIntervals - 1];
+    matrixEquations[countOfvars - 1][countOfvars - i] = generateCoffs(hn, 'last')[i - 1];
+  }
 
-  
   logger.matrixLog(matrixEquations);
   logger.matrixLog(vectorEquations);
 }
