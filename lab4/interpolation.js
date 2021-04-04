@@ -59,6 +59,15 @@ const getIntervalsLength = (nodes) => {
   return intervalsLength;
 }
 
+const generateCoffs = (hi, numEquation) => {
+  const coffs = [
+    [ hi, pow(hi, 2), pow(hi, 3) ],
+    [ -1, -2 * hi, -3 * hi, 1 ],
+    [ 0, -1, -3 * hi, 0, 1 ]
+  ]
+  return coffs[numEquation];
+}
+
 const splineMethod = (nodes, values) => {
   const xIntervals = getIntervalsLength(nodes);
   const yItnervals = getIntervalsLength(values);
@@ -68,45 +77,31 @@ const splineMethod = (nodes, values) => {
   const row = Array(countOfvars).fill(0);
   const matrixEquations = Array(countOfvars);
 
+  const iterator = (index, intervals, numEquation) => {
+    for (let i = 0; i < intervals; i++) {
+      matrixEquations[i + index] = row.slice();
+      const localOffset = i * offset;
+      const hi = xIntervals[i];
+      const coffs = generateCoffs(hi, numEquation);
+      for (let j = localOffset; j < countOfvars; j++) {
+        if (coffs[j - localOffset] || coffs[j - localOffset] === 0) 
+          matrixEquations[i + index][j] = coffs[j - localOffset];
+        else break;
+      }
+    }
+    return index + intervals;
+  }
+  
   let index = 0;
-  for (let i = 0; i < countOfIntervals; i++) {
-    matrixEquations[i] = row.slice();
-    vectorEquations[i] = yItnervals[i];
-    const localOffset = i * offset;
-    const hi = xIntervals[i];
-    const powsHi = [ hi, pow(hi, 2), pow(hi, 3) ];
-    for (let j = localOffset; j < countOfvars; j++) {
-      if (powsHi[j - localOffset]) matrixEquations[i][j] = powsHi[j - localOffset];
-      else break;
-    }
+  for (let i = 0; i < offset; i++) {
+    const count = i > 0 ? countOfIntervals - 1 : countOfIntervals;
+    index += iterator(index, count, i);
   }
 
-  index += countOfIntervals;
-  for (let i = 0; i < countOfIntervals - 1; i++) {
-    matrixEquations[i + index] = row.slice();
-    const localOffset = i * offset;
-    const hi = xIntervals[i];
-    const coffs = [ -1, -2 * hi, -3 * hi, 1 ];
-    for (let j = localOffset; j < countOfvars; j++) {
-      if (coffs[j - localOffset] || coffs[j - localOffset] === 0)
-        matrixEquations[i + index][j] = coffs[j - localOffset];
-      else break;
-    }
-  }
+  for (let i = 0; i <= countOfIntervals; i++) vectorEquations[i] = yItnervals[i];
 
-  index += countOfIntervals - 1;
-  for (let i = 0; i < countOfIntervals - 1; i++) {
-    matrixEquations[i + index] = row.slice();
-    const localOffset = i * offset;
-    const hi = xIntervals[i];
-    const coffs = [ 0, -1, -3 * hi, 0, 1 ];
-    for (let j = localOffset; j < countOfvars; j++) {
-      if (coffs[j - localOffset] || coffs[j - localOffset] === 0)
-        matrixEquations[i + index][j] = coffs[j - localOffset];
-      else break;
-    }
-  }
 
+  
   logger.matrixLog(matrixEquations);
   logger.matrixLog(vectorEquations);
 }
