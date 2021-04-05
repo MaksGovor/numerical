@@ -22,10 +22,10 @@ fns.significantRound = (accuracy, num) => {
   return fns.roundPlus(accuracy + acc, num);
 };
 
-fns.roundMins = (vec, eps = 1e-16) => {
+fns.roundMins = (vec, eps = 1e-15) => {
   const rounded = vec.slice();
   for (let i = 0; i < vec.length; i++) {
-    if (fns.mod(vec[i]) < eps) rounded = Math.round(vec[i]);
+    if (fns.mod(vec[i]) < eps) rounded[i] = Math.round(vec[i]);
   }
   return rounded;
 };

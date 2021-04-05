@@ -1,10 +1,12 @@
 'use strict';
 
-const { nodes } = require('./task.json');
-const { pow } = Math;
 const fns = require('./fns');
 const logger = require('./logger');
+const equationSolver = require('./gauss-solve');
+
 const f = require('./interpolatedFunction');
+const { nodes, indexes } = require('./task.json');
+const { pow } = Math;
 
 const roundTo6 = fns.partial(fns.roundPlus, 6);
 const functionValues = nodes.map(f);
@@ -74,7 +76,6 @@ const splineMethod = (nodes, values) => {
   const yItnervals = getIntervalsLength(values);
   const countOfIntervals = nodes.length - 1, offset = 3;
   const countOfvars = countOfIntervals * offset;
-  const vectorEquations = Array(countOfvars).fill(0);
   const row = Array(countOfvars).fill(0);
   const matrixEquations = [];
 
@@ -97,10 +98,8 @@ const splineMethod = (nodes, values) => {
   for (let i = 0; i < offset; i++) {
     const count = i > 0 ? countOfIntervals - 1 : countOfIntervals;
     index += iterator(index, count, i);
-    console.log(index);
   }
 
-  for (let i = 0; i < countOfIntervals; i++) vectorEquations[i] = yItnervals[i];
   matrixEquations.push(row.slice(), row.slice());
 
   const last = offset - 1;
@@ -109,15 +108,38 @@ const splineMethod = (nodes, values) => {
     const hn = xIntervals[countOfIntervals - 1];
     matrixEquations[countOfvars - 1][countOfvars - i] = generateCoffs(hn, 'last')[i - 1];
   }
+  for(let i = 0; i < countOfvars; i++) matrixEquations[i].push(yItnervals[i] || 0);
 
-  logger.matrixLog(matrixEquations);
-  logger.matrixLog(vectorEquations);
+  const coffs = equationSolver(matrixEquations);
+  const res = fns.roundMins(coffs);
+  return res;
 }
 
-splineMethod(nodes, functionValues);
+const displayCoffs = (coffs, letters) => {
+  const len = letters.length;
+  if (coffs.length % len !== 0) return;
+  let out = '';
+  let index = 0
+
+  for (let i = 1; i <= coffs.length / len; i++) {
+    for (let k = 0; k < len; k++) {
+      out += `${letters[k]}${indexes[i]} = ${coffs[index]} `;
+      index++;
+    }
+    out += '\n';
+  }
+ 
+  return out;
+}
+
 // Usage polynom Newton
 // const separatedDiff = interpolationNewton(nodes, functionValues);
 // const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
 
 // logger.log('Interpolation by the Newton method', logger.blue);
 // logger.log(polynomNewton, logger.green, ' ');
+
+// Usage spline method
+
+const coffs = splineMethod(nodes, functionValues);
+displayCoffs(coffs, ['a', 'b', 'c']);
