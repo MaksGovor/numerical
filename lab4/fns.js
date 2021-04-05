@@ -2,6 +2,8 @@
 
 const fns = {};
 
+fns.mod = Math.abs;
+
 fns.roundPlus = (accuracy, num) => {
   if (isNaN(num) || isNaN(accuracy)) return false;
   const p = Math.pow(10, accuracy);
@@ -18,6 +20,14 @@ fns.significantRound = (accuracy, num) => {
     acc++;
   }
   return fns.roundPlus(accuracy + acc, num);
+};
+
+fns.roundMins = (vec, eps = 1e-16) => {
+  const rounded = vec.slice();
+  for (let i = 0; i < vec.length; i++) {
+    if (fns.mod(vec[i]) < eps) rounded = Math.round(vec[i]);
+  }
+  return rounded;
 };
 
 fns.partial = (fn, ...args) => (...rest) => fn(...args, ...rest);
