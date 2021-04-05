@@ -67,6 +67,21 @@ const funcPolynom = (coffs, nodes, firstValue) => (x) => {
   return sum;
 }
 
+const calcUncertainty = (func, polynom, nodes) => {
+  const compareTable = [];
+
+  for(const node of nodes) {
+    const pv = polynom(node), fv = func(node);
+    compareTable.push({
+      'x': node,
+      'P₄(x)': pv,
+      'y(x)': fv,
+      '|P₄(x) - y(x)|': fns.mod(pv - fv)
+    })
+  }
+  return compareTable;
+}
+
 // Interpolation spline
 
 const getIntervalsLength = (nodes) => {
@@ -126,7 +141,6 @@ const splineMethod = (nodes, values) => {
   }
   for(let i = 0; i < countOfvars; i++) matrixEquations[i].push(yItnervals[i] || 0);
 
-  logger.matrixLog(matrixEquations, 'Matrix of coffs');
   const res = equationSolver(matrixEquations);
   const coffs = fns.roundMins(res);
   return { coffs, aValues: values };
@@ -176,12 +190,11 @@ const displaySplines = (values, nodes) => {
 const separatedDiff = interpolationNewton(nodes, functionValues);
 const polynomNewtonStr = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
 const funcPolynomNewton = funcPolynom(separatedDiff, nodes, functionValues[0]);
-
-console.log(funcPolynomNewton(6));
-console.log(f(6));
+const compareTable = calcUncertainty(f, funcPolynomNewton, nodes);
 
 logger.log('Interpolation by the Newton method', logger.blue);
 logger.log(polynomNewtonStr, logger.green, ' ');
+logger.matrixLog(compareTable, 'Compare results');
 
 // Usage spline method
 const result = splineMethod(nodes, functionValues);
@@ -189,6 +202,6 @@ const coffsStr = displayCoffs(result, ['b', 'c', 'd']);
 const splines = displaySplines(result, nodes);
 
 logger.log('Interpolation by the spline method. Coffs:', logger.blue);
-logger.log(coffsStr, logger.green, '\n');
+logger.log(coffsStr, logger.green, '\0');
 logger.log('Splines: ', logger.blue);
-logger.log(splines, logger.green, '\n');
+logger.log(splines, logger.green, '\0');
