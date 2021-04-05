@@ -103,27 +103,29 @@ const splineMethod = (nodes, values) => {
   matrixEquations.push(row.slice(), row.slice());
 
   const last = offset - 1;
-  matrixEquations[countOfvars - 2][last] = 1;
+  matrixEquations[countOfvars - 2][last - 1] = 1;
   for (let i = last; i > 0; i--) {
     const hn = xIntervals[countOfIntervals - 1];
     matrixEquations[countOfvars - 1][countOfvars - i] = generateCoffs(hn, 'last')[i - 1];
   }
   for(let i = 0; i < countOfvars; i++) matrixEquations[i].push(yItnervals[i] || 0);
 
-  const coffs = equationSolver(matrixEquations);
-  const res = fns.roundMins(coffs);
-  return res;
+  const res = equationSolver(matrixEquations);
+  const coffs = fns.roundMins(res);
+  return { coffs, aValues: values };
 }
 
-const displayCoffs = (coffs, letters) => {
+const displayCoffs = (values, letters) => {
+  const { coffs, aValues} = values;
   const len = letters.length;
   if (coffs.length % len !== 0) return;
   let out = '';
   let index = 0
 
   for (let i = 1; i <= coffs.length / len; i++) {
+    out += `a${indexes[i]} = ${aValues[i - 1]} | `;
     for (let k = 0; k < len; k++) {
-      out += `${letters[k]}${indexes[i]} = ${coffs[index]} `;
+      out += `${letters[k]}${indexes[i]} = ${coffs[index]} | `;
       index++;
     }
     out += '\n';
@@ -132,6 +134,9 @@ const displayCoffs = (coffs, letters) => {
   return out;
 }
 
+const displaySplines = (coffs) => {
+  
+}
 // Usage polynom Newton
 // const separatedDiff = interpolationNewton(nodes, functionValues);
 // const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
@@ -141,5 +146,10 @@ const displayCoffs = (coffs, letters) => {
 
 // Usage spline method
 
-const coffs = splineMethod(nodes, functionValues);
-displayCoffs(coffs, ['a', 'b', 'c']);
+const result = splineMethod(nodes, functionValues);
+const coffsStr = displayCoffs(result, ['b', 'c', 'd']);
+
+logger.log('Interpolation by the spline method. Coffs:', logger.blue);
+logger.log(coffsStr, logger.green, '\n');
+
+logger.log('Splines: ', logger.blue);
