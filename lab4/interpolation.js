@@ -134,22 +134,40 @@ const displayCoffs = (values, letters) => {
   return out;
 }
 
-const displaySplines = (coffs) => {
-  
-}
-// Usage polynom Newton
-// const separatedDiff = interpolationNewton(nodes, functionValues);
-// const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+const displaySplines = (values, nodes) => {
+  const { coffs, aValues} = values;
+  const size = 3;
+  const subCoffs = [];
+  for (let i = 0; i < Math.ceil(coffs.length/size); i++) {
+    subCoffs[i] = coffs.slice((i*size), (i*size) + size);
+    subCoffs[i].unshift(aValues[i]);
+  }
 
-// logger.log('Interpolation by the Newton method', logger.blue);
-// logger.log(polynomNewton, logger.green, ' ');
+  let out = '';
+  for(const coff of subCoffs) {
+    const index = subCoffs.indexOf(coff);
+    const node = nodes[index] >= 0 ? nodes[index]: -nodes[index];
+    const signNode = nodes[index] >= 0 ? '-': '+';
+    const nodeStr = `(x ${signNode} ${node})`;
+    out += `S${indexes[index + 1]}(x) = ${coff[0]} + ${coff[1]}∙${nodeStr} + ${coff[2]}∙${nodeStr}² + ${coff[3]}∙${nodeStr}³\n`;
+  }
+
+  return out;
+}
+
+//Usage polynom Newton
+const separatedDiff = interpolationNewton(nodes, functionValues);
+const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+
+logger.log('Interpolation by the Newton method', logger.blue);
+logger.log(polynomNewton, logger.green, ' ');
 
 // Usage spline method
-
 const result = splineMethod(nodes, functionValues);
 const coffsStr = displayCoffs(result, ['b', 'c', 'd']);
+const splines = displaySplines(result, nodes);
 
 logger.log('Interpolation by the spline method. Coffs:', logger.blue);
 logger.log(coffsStr, logger.green, '\n');
-
 logger.log('Splines: ', logger.blue);
+logger.log(splines, logger.green, '\n');
