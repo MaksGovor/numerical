@@ -80,7 +80,7 @@ const getIntervalsLength = (nodes) => {
 const generateCoffs = (hi, numEquation) => {
   const coffs = {
     '0': [ hi, pow(hi, 2), pow(hi, 3) ],
-    '1': [ -1, -2 * hi, -3 * hi, 1 ],
+    '1': [ -1, -2 * hi, -3 * pow(hi, 2), 1 ],
     '2': [ 0, -1, -3 * hi, 0, 1 ],
     last: [3 * hi, 1]
   }
@@ -126,6 +126,7 @@ const splineMethod = (nodes, values) => {
   }
   for(let i = 0; i < countOfvars; i++) matrixEquations[i].push(yItnervals[i] || 0);
 
+  logger.matrixLog(matrixEquations, 'Matrix of coffs');
   const res = equationSolver(matrixEquations);
   const coffs = fns.roundMins(res);
   return { coffs, aValues: values };
