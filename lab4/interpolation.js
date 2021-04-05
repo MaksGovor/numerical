@@ -51,6 +51,22 @@ const getNewtonPolynom = (diffs, nodes, firstValue) => {
   return polynom;
 }
 
+const funcPolynom = (coffs, nodes, firstValue) => (x) => {
+  const len = nodes.length;
+  const items = [firstValue, ...coffs];
+
+  let sum = 0;
+  for (let i = 0; i < len; i++) {
+    let multiplier = items[i];
+    for (let k = 0; k < i; k++) {
+      multiplier *= (x - nodes[k]);
+    }
+    sum += multiplier;
+  }
+
+  return sum;
+}
+
 // Interpolation spline
 
 const getIntervalsLength = (nodes) => {
@@ -157,10 +173,14 @@ const displaySplines = (values, nodes) => {
 
 //Usage polynom Newton
 const separatedDiff = interpolationNewton(nodes, functionValues);
-const polynomNewton = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+const polynomNewtonStr = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
+const funcPolynomNewton = funcPolynom(separatedDiff, nodes, functionValues[0]);
+
+console.log(funcPolynomNewton(6));
+console.log(f(6));
 
 logger.log('Interpolation by the Newton method', logger.blue);
-logger.log(polynomNewton, logger.green, ' ');
+logger.log(polynomNewtonStr, logger.green, ' ');
 
 // Usage spline method
 const result = splineMethod(nodes, functionValues);
