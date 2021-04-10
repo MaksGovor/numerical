@@ -67,6 +67,20 @@ const funcPolynom = (coffs, nodes, firstValue) => (x) => {
   return sum;
 }
 
+const generateStepsByNodes = (nodes, step) => {
+  const min = Math.min(...nodes);
+  const max = Math.max(...nodes);
+  const res = [];
+  let i = min;
+  
+  while (i <= max) {
+    res.push(i);
+    i+= step;  
+  }
+  
+  return res;
+}
+
 const calcUncertainty = (func, polynom, nodes) => {
   const compareTable = [];
 
@@ -186,22 +200,57 @@ const displaySplines = (values, nodes) => {
   return out;
 }
 
+const generateFuncSplines = (coffs, aValues, nodes) => (x) => {
+  const len = nodes.length;
+  const size = 3;
+  const subCoffs = [];
+  for (let i = 0; i < Math.ceil(coffs.length/size); i++) {
+    subCoffs[i] = coffs.slice((i*size), (i*size) + size);
+    subCoffs[i].unshift(aValues[i]);
+  }
+
+  let interval;
+  for (let i = 1; i < len; i++) {
+    const upd = i === len - 1 ? true : x < nodes[i];
+    if (x >= nodes[i-1] && upd) {
+      interval = i - 1;
+      break;
+    }
+  }
+
+  const node = nodes[interval], xCoffs = subCoffs[interval];
+  const xNode = x - node;
+  let res = 0;
+  for (let i = 0; i < xCoffs.length; i++) {
+    res += pow(xNode, i) * xCoffs[i];
+  }
+  
+  return res;
+}
+
+// Prepare for using
+
+const steps = generateStepsByNodes(nodes, 0.25);
+
 //Usage polynom Newton
 const separatedDiff = interpolationNewton(nodes, functionValues);
 const polynomNewtonStr = getNewtonPolynom(separatedDiff, nodes, functionValues[0]);
 const funcPolynomNewton = funcPolynom(separatedDiff, nodes, functionValues[0]);
-const compareTable = calcUncertainty(f, funcPolynomNewton, nodes);
+const compareTableNewton = calcUncertainty(f, funcPolynomNewton, steps);
 
 logger.log('Interpolation by the Newton method', logger.blue);
 logger.log(polynomNewtonStr, logger.green, ' ');
-logger.matrixLog(compareTable, 'Compare results');
+logger.matrixLog(compareTableNewton, 'Compare results Newton');
 
 // Usage spline method
 const result = splineMethod(nodes, functionValues);
 const coffsStr = displayCoffs(result, ['b', 'c', 'd']);
 const splines = displaySplines(result, nodes);
+const funcSpline = generateFuncSplines(result.coffs, result.aValues, nodes);
+const compareTableSpline = calcUncertainty(f, funcSpline, steps);
 
 logger.log('Interpolation by the spline method. Coffs:', logger.blue);
 logger.log(coffsStr, logger.green, '\0');
 logger.log('Splines: ', logger.blue);
 logger.log(splines, logger.green, '\0');
+logger.matrixLog(compareTableSpline, 'Compare results Spline');
