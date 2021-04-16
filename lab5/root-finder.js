@@ -2,9 +2,8 @@
 
 const { rootBorders } = require('./task.json');
 const polynom = require('./polynom');
-const fns = require('./fns')
+const fns = require('./fns');
 const eps = Math.pow(10, -6);
-
 
 // Bisection method
 
@@ -20,17 +19,13 @@ const bisectionMethod = (rootBorder, polynom, eps) => {
     if (value * polynom(leftP) > 0) leftP = x;
     else rigthP = x;
 
-    if (fns.mod(rigthP - leftP) < eps){
-      console.log(i);
-      return x;
+    if (fns.mod(rigthP - leftP) < eps) {
+      return { res: x, i };
     }
   }
-}
+};
 
-// const res = bisectionMethod(rootBorders[0], polynom, eps);
-// console.log(res);
-
-// Chord method 
+// Chord method
 
 const chordMethod = (rootBorder, polynom, eps) => {
   const [ leftP, rigthP ] = rootBorder;
@@ -46,15 +41,11 @@ const chordMethod = (rootBorder, polynom, eps) => {
     const nextPoint = variablePoint - (variableValue * argsDiff) / valuesDiff;
 
     if (fns.mod(nextPoint - variablePoint) < eps) {
-      console.log(i);
-      return nextPoint;
-    } 
+      return { res: nextPoint, i };
+    }
     variablePoint = nextPoint;
   }
-}
-
-// const res = chordMethod(rootBorders[0], polynom, eps);
-// console.log(res);
+};
 
 // Tangent method
 
@@ -69,12 +60,30 @@ const tangentMethod = (rootBorder, polynom, eps) => {
     const nextPoint = approachPoint - frac;
 
     if (fns.mod(nextPoint - approachPoint) < eps) {
-      console.log(i);
-      return nextPoint;
+      return { res: nextPoint, i };
     }
-    approachPoint = nextPoint
-  }  
-}
+    approachPoint = nextPoint;
+  }
+};
 
-// const res = chordMethod(rootBorders[0], polynom, eps);
-// console.log(res);
+// Usage
+
+const table = rootBorders.map((rootBorder) => {
+  const resBis = bisectionMethod(rootBorder, polynom, eps);
+  const resCh = chordMethod(rootBorder, polynom, eps);
+  const resTan = tangentMethod(rootBorder, polynom, eps);
+
+  const row = {
+    interval: rootBorder,
+    iterBisection: resBis.i,
+    resBisection: resBis.res,
+    iterChord: resCh.i,
+    resChord: resCh.res,
+    iterTangent: resTan.i,
+    resTangent: resTan.res
+  };
+
+  return row;
+});
+
+console.table(table);
