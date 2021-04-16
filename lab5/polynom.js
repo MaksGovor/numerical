@@ -35,11 +35,7 @@ const getPolynom = (coffs, alpha, k, orderDerivative) => {
 };
 
 const polynom = getPolynom(coffs, alpha, k, 0);
-const polynomD1 = getPolynom(coffs, alpha, k, 1);
-const polynomD2 = getPolynom(coffs, alpha, k, 2);
+const d1 = getPolynom(coffs, alpha, k, 1);
+const d2 = getPolynom(coffs, alpha, k, 2);
 
-module.exports = { 
-  polynom,
-  polynomD1,
-  polynomD2
-};
+module.exports = Object.assign(polynom, { d1, d2 });
