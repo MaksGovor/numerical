@@ -2,7 +2,6 @@
 
 const { rootBorders } = require('./task.json');
 const polynom = require('./polynom');
-const fns = require('./fns');
 const eps = Math.pow(10, -6);
 
 // Bisection method
@@ -19,7 +18,7 @@ const bisectionMethod = (rootBorder, polynom, eps) => {
     if (value * polynom(leftP) > 0) leftP = x;
     else rigthP = x;
 
-    if (fns.mod(rigthP - leftP) < eps) {
+    if (Math.abs(rigthP - leftP) < eps) {
       return { res: x, i };
     }
   }
@@ -40,7 +39,7 @@ const chordMethod = (rootBorder, polynom, eps) => {
     const argsDiff = variablePoint - permanentPoint;
     const nextPoint = variablePoint - (variableValue * argsDiff) / valuesDiff;
 
-    if (fns.mod(nextPoint - variablePoint) < eps) {
+    if (Math.abs(nextPoint - variablePoint) < eps) {
       return { res: nextPoint, i };
     }
     variablePoint = nextPoint;
@@ -59,7 +58,7 @@ const tangentMethod = (rootBorder, polynom, eps) => {
     const frac = polynom(approachPoint) / polynom.d1(approachPoint);
     const nextPoint = approachPoint - frac;
 
-    if (fns.mod(nextPoint - approachPoint) < eps) {
+    if (Math.abs(nextPoint - approachPoint) < eps) {
       return { res: nextPoint, i };
     }
     approachPoint = nextPoint;
