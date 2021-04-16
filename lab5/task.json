@@ -2,5 +2,6 @@
   "variant": 5,
   "alpha": 0,
   "k": 3,
-  "coffs": [2, -3, -1, 0, 0, 3]
+  "coffs": [2, -3, -1, 0, 0, 3],
+  "rootBoundaries": [[-2, 0]]
 }
