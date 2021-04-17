@@ -74,12 +74,12 @@ const table = rootBorders.map((rootBorder) => {
 
   const row = {
     interval: rootBorder,
-    iterBisection: resBis.i,
-    resBisection: resBis.res,
-    iterChord: resCh.i,
-    resChord: resCh.res,
-    iterTangent: resTan.i,
-    resTangent: resTan.res
+    'iterations Bisection': resBis.i,
+    'result Bisection': resBis.res,
+    'iterations Chord': resCh.i,
+    'result Chord': resCh.res,
+    'iterations Tangent': resTan.i,
+    'result Tangent': resTan.res
   };
 
   return row;
