@@ -1,12 +1,10 @@
 'use strict';
 
-const { coffs, alpha, k } = require('./task.json');
+const { coffs} = require('./task.json');
 
-const getCoffsOfderivative = (coffs, alpha, k, order) => {
+const getCoffsOfderivative = (coffs, order) => {
   const copyCoffs = coffs.slice();
   const last = coffs.length - 1;
-  copyCoffs[0] *= 1 + alpha;
-  copyCoffs[last] *= k;
   
   for (let k = 0; k < order; k++) {
     for (let i = last; i >= 0; i--) {
@@ -17,9 +15,9 @@ const getCoffsOfderivative = (coffs, alpha, k, order) => {
   return copyCoffs.map((x) => x === 0 ? 0: x);
 }
 
-const getPolynom = (coffs, alpha, k, orderDerivative) => {
+const getPolynom = (coffs, orderDerivative) => {
   const last = coffs.length - 1;
-  const coffsVariant = getCoffsOfderivative(coffs, alpha, k, orderDerivative);
+  const coffsVariant = getCoffsOfderivative(coffs, orderDerivative);
 
   return (x) => {
     let res = 0;
@@ -34,8 +32,8 @@ const getPolynom = (coffs, alpha, k, orderDerivative) => {
   }
 };
 
-const polynom = getPolynom(coffs, alpha, k, 0);
-const d1 = getPolynom(coffs, alpha, k, 1);
-const d2 = getPolynom(coffs, alpha, k, 2);
+const polynom = getPolynom(coffs, 0);
+const d1 = getPolynom(coffs, 1);
+const d2 = getPolynom(coffs, 2);
 
 module.exports = Object.assign(polynom, { d1, d2 });
