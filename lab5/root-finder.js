@@ -18,7 +18,8 @@ const bisectionMethod = (rootBorder, polynom, eps) => {
     if (value * polynom(leftP) > 0) leftP = x;
     else rigthP = x;
 
-    if (Math.abs(rigthP - leftP) < eps) {
+    if (Math.abs(rigthP - leftP) < eps
+    || Math.abs(polynom(x)) < eps) {
       return { res: x, i };
     }
   }
@@ -39,7 +40,8 @@ const chordMethod = (rootBorder, polynom, eps) => {
     const argsDiff = variablePoint - permanentPoint;
     const nextPoint = variablePoint - (variableValue * argsDiff) / valuesDiff;
 
-    if (Math.abs(nextPoint - variablePoint) < eps) {
+    if (Math.abs(nextPoint - variablePoint) < eps
+    || Math.abs(polynom(nextPoint)) < eps) {
       return { res: nextPoint, i };
     }
     variablePoint = nextPoint;
@@ -58,7 +60,8 @@ const tangentMethod = (rootBorder, polynom, eps) => {
     const frac = polynom(approachPoint) / polynom.d1(approachPoint);
     const nextPoint = approachPoint - frac;
 
-    if (Math.abs(nextPoint - approachPoint) < eps) {
+    if (Math.abs(nextPoint - approachPoint) < eps
+    || Math.abs(polynom(nextPoint)) < eps) {
       return { res: nextPoint, i };
     }
     approachPoint = nextPoint;
