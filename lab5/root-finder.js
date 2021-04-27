@@ -56,7 +56,7 @@ const tangentMethod = (rootBorder, polynom, eps) => {
   const derivativeMul = polynom.d1(intervalPoint) * polynom.d2(intervalPoint);
   let approachPoint = derivativeMul < 0 ? leftP : rigthP;
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; ; i++) {
     const frac = polynom(approachPoint) / polynom.d1(approachPoint);
     const nextPoint = approachPoint - frac;
 
