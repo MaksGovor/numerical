@@ -39,15 +39,9 @@ const gaussMethod = (func, count, interval) => {
 
   let sum = 0;
   for (let i = 0; i < x.length; i++) {
+    if (x[i] !== 0) sum += funcM (-x[i]) * A[i];
     sum += funcM (x[i]) * A[i];
   }
 
   return sum;
 }
-
-// const res1 = trapeziumMethod(func, 100, [-0.7, 1.2]);
-// const res2 = simpsonMethod(func, 50, [-0.7, 1.2]);
-// console.log(res1);
-
-const res3 = gaussMethod(func, 6, [-0.7, 1.2]);
-console.log(res3);
