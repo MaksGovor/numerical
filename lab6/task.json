@@ -1,4 +1,8 @@
 {
+  "interval": [-0.7, 1.2],
+  "iterTrapezium": 477,
+  "iterSimpson": 53,
+  "iterGauss": 9,
   "quadraticCoeffs": {
     "1": {
       "x": [0],

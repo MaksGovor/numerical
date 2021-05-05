@@ -1,7 +1,12 @@
 'use strict';
 
 const func = require('./function');
-const { quadraticCoeffs } = require('./task.json');
+const { 
+  interval, quadraticCoeffs, 
+  iterGauss, iterSimpson,
+  iterTrapezium } = require('./task.json');
+
+const ACCURATE_VALUE = 1.72230814;
 
 const trapeziumMethod = (func, count, interval) => {
   const [ leftP, rightP ] = interval;
@@ -12,7 +17,8 @@ const trapeziumMethod = (func, count, interval) => {
   return sum * step;
 };
 
-const simpsonMethod = (func, count, interval) => {
+const simpsonMethod = (func, countA, interval) => {
+  const count = Math.ceil(countA / 2);
   const [ leftP, rightP ] = interval;
   const step = (rightP - leftP) / (2 * count); // h
   const yValues = [];
@@ -45,3 +51,30 @@ const gaussMethod = (func, count, interval) => {
 
   return sum;
 }
+
+const res1 = trapeziumMethod(func, iterTrapezium, interval);
+const res2 = simpsonMethod(func, iterSimpson, interval);
+const res3 = gaussMethod(func, iterGauss, interval);
+
+const table = {
+  'Trapezium method': {
+    interval, 
+    iterations: iterTrapezium,
+    result: res1,
+    eps: Math.abs(res1 - ACCURATE_VALUE)
+  },
+  'Simpson method': {
+    interval, 
+    iterations: iterSimpson, 
+    result: res2,
+    eps: Math.abs(res2 - ACCURATE_VALUE)
+  },
+  'Gauss method': {
+    interval, 
+    iterations: iterGauss,
+    result: res3,
+    eps: Math.abs(res3 - ACCURATE_VALUE)
+  }
+};
+
+console.table(table);
