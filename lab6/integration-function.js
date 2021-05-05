@@ -6,7 +6,7 @@ const {
   iterGauss, iterSimpson,
   iterTrapezium } = require('./task.json');
 
-const ACCURATE_VALUE = 1.72230814;
+const ACCURATE_VALUE = 1.72230813698447;
 
 const trapeziumMethod = (func, count, interval) => {
   const [ leftP, rightP ] = interval;
@@ -61,18 +61,21 @@ const table = {
     interval, 
     iterations: iterTrapezium,
     result: res1,
+    mathCad: ACCURATE_VALUE,
     eps: Math.abs(res1 - ACCURATE_VALUE)
   },
   'Simpson method': {
     interval, 
     iterations: iterSimpson, 
     result: res2,
+    mathCad: ACCURATE_VALUE,
     eps: Math.abs(res2 - ACCURATE_VALUE)
   },
   'Gauss method': {
     interval, 
     iterations: iterGauss,
     result: res3,
+    mathCad: ACCURATE_VALUE,
     eps: Math.abs(res3 - ACCURATE_VALUE)
   }
 };
