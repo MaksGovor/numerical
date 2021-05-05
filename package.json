@@ -21,6 +21,7 @@
   "homepage": "https://github.com/MaksGovor/numerical#readme",
   "dependencies": {
     "eslint": "^7.20.0",
-    "gaussian-elimination": "^1.0.2"
+    "gaussian-elimination": "^1.0.2",
+    "nerdamer": "^1.1.10"
   }
 }
