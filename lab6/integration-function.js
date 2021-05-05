@@ -77,4 +77,5 @@ const table = {
   }
 };
 
+console.log('\x1b[1;37m'); // Bold console
 console.table(table);
