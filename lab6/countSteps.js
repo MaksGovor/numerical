@@ -23,4 +23,14 @@ const rn = (a, b, n) => valuesFuncD[2*n] * ((factorial(n))**4) * ((b - a)**(2*n 
 let nr = 2;
 for(; Math.abs(rn(-0.7, 1.2, nr)) >= Math.abs(eps); nr++) { }
 
-console.log(nr);
+let n2 = 1
+for(; Math.abs(r2(-0.7, 1.2, n2)) >= Math.abs(eps); n2++) { }
+
+let n4 = 1
+for(; Math.abs(r4(-0.7, 1.2, n4)) >= Math.abs(eps); n4++) { }
+
+console.log('\x1b[1;37m'); // Bold console
+console.table({ 
+  'Trapezium method iterations': nr,
+  'Simpson method iterations': n2,
+  'Gauss method iterations': n4 });
