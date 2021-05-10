@@ -6,5 +6,6 @@ Labs of numerical methods
 - [danilevsky method](https://github.com/MaksGovor/numerical/tree/main/lab3)
 - [interpolation methods](https://github.com/MaksGovor/numerical/tree/main/lab4)
 - [root finder methods](https://github.com/MaksGovor/numerical/tree/main/lab5)
+- [integrate function methods](https://github.com/MaksGovor/numerical/tree/main/lab6)
 
 
