@@ -1,23 +1,20 @@
 'use strict';
 
 const yD = require('./function');
-const { interval, y0, ORDER_ADAMS } = require('./task.json');
+const { roundPlus } = require('./fns');
+const { interval, y0, h, ORDER_ADAMS } = require('./task.json');
 const eps = 10 ** (-1);
-
-const roundPlus = (accuracy, num) => {
-  if (isNaN(num) || isNaN(accuracy)) return false;
-  const p = Math.pow(10, accuracy);
-  const mantisa = Math.round(num * p);
-  return mantisa / p;
-};
 
 const rungeKuttMethod = (yD, interval, step, y0, points) => {
   const [ x0, right ] = interval;
   const result = [ [x0, y0] ];
+  const xArr = [];
   let stepH = step;
 
+  for (let i = x0; i <= right; i = roundPlus(6, i + step)) xArr.push(i);
+
   let yi = y0, count = 1;
-  for (let xi = x0; xi <= right - stepH;) {
+  for (let xi = x0; xi <= roundPlus(6, right - stepH);) {
     const k1 = stepH * yD(xi, yi);
     const k2 = stepH * yD(xi + stepH / 2, yi + k1 / 2);
     const k3 = stepH * yD(xi + stepH / 2, yi + k2 / 2);
@@ -25,8 +22,8 @@ const rungeKuttMethod = (yD, interval, step, y0, points) => {
 
     const deltaY = (k1 + 2 * (k2 + k3) + k4) / 6;
     // console.table({ k1, k2, k3, k4, deltaY });
-    xi += stepH, yi += deltaY;
-    result.push([ roundPlus(6, xi), yi ]);
+    xi = roundPlus(6, xi + stepH) , yi += deltaY;
+    result.push([ xi, yi ]);
 
     if (Math.abs((k2 - k3) / (k1 - k2)) > eps) stepH /= 2;
     
@@ -34,13 +31,18 @@ const rungeKuttMethod = (yD, interval, step, y0, points) => {
     if (points && count === points) break;
   }
 
-  return result;
+  const retResult = stepH === step ? result :
+    result.filter(([ x ]) => xArr.includes(x));
+  return retResult;
 };
 
 const adamsMethod = (yD, interval, step, y0) => {
   const result = rungeKuttMethod(yD, interval, step, y0, ORDER_ADAMS);
   const [ x0, right ] = interval;
+  const xArr = [];
   let stepH = step;
+
+  for (let i = x0; i <= right; i = roundPlus(6, i + step)) xArr.push(i);
 
   for (let i = ORDER_ADAMS - 1; i < (right - x0) / step; i++) {
     const [xi, yi] = result[i];
@@ -59,13 +61,31 @@ const adamsMethod = (yD, interval, step, y0) => {
     result.push([ xp1, yPush ]);
   }
   
+  const retResult = stepH === step ? result :
+    result.filter(([ x ]) => xArr.includes(x));
+  return retResult;
+}
+
+const epsilonErr = (valH, valHd2, step, x) => {
+  const xArr = [];
+  const len = valH.length;
+  const result = valH.map(arr => arr.slice());
+  for (let i = valH[0][0]; i <= valH[len -1][0]; i = roundPlus(6, i + step)) xArr.push(i);
+  const valHd2filtered = valHd2.filter(([ x ]) => xArr.includes(x));
+
+  for (let i = 0; i < len; i++) {
+    const eps = (valH[i][1] - valHd2filtered[i][1]) / 15;
+    result[i]['ε(xᵢ)'] = (eps);
+  }
+ 
   return result;
 }
 
-const f = (x, y) => 0.25 * (y**2) + x ** 2;
+const resRK1 = rungeKuttMethod(yD, interval, h, y0);
+const resRK2 = rungeKuttMethod(yD, interval, h / 2, y0);
+const resRK = epsilonErr(resRK1, resRK2, 0.1);
 
-const resRK = rungeKuttMethod(f, [0, 1], 0.1, -1);
+// const resA =  adamsMethod(yD, [0, 6], 0.1, 0);
 
 console.table(resRK);
-
-// adamsMethod(f, [0, 1], 0.1, -1);
+// console.table(resA);
