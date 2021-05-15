@@ -2,6 +2,7 @@
 
 const yD = require('./function');
 const { roundPlus } = require('./fns');
+const logger = require('./logger');
 const { interval, y0, h, ORDER_ADAMS } = require('./task.json');
 const eps = 10 ** (-1);
 
@@ -85,7 +86,10 @@ const resRK1 = rungeKuttMethod(yD, interval, h, y0);
 const resRK2 = rungeKuttMethod(yD, interval, h / 2, y0);
 const resRK = epsilonErr(resRK1, resRK2, 0.1);
 
-// const resA =  adamsMethod(yD, [0, 6], 0.1, 0);
+const resA1 =  adamsMethod(yD, interval, h, y0);
+const resA2 =  adamsMethod(yD, interval, h / 2, y0);
+const resA = epsilonErr(resA1, resA2, 0.1);
 
-console.table(resRK);
-// console.table(resA);
+logger.log('', logger.white, ' ');
+logger.matrixLog(resRK, 'Result by Runge-Kutt method');
+logger.matrixLog(resA, 'Result by Adams method');
