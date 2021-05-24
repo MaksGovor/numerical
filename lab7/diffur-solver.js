@@ -67,7 +67,7 @@ const adamsMethod = (yD, interval, step, y0) => {
   return retResult;
 }
 
-const epsilonErr = (valH, valHd2, step, x) => {
+const epsilonErr = (valH, valHd2, step) => {
   const xArr = [];
   const len = valH.length;
   const result = valH.map(arr => arr.slice());
