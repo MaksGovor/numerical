@@ -9,5 +9,3 @@
 - [root finder methods](https://github.com/MaksGovor/numerical/tree/main/lab5)
 - [integrate function methods](https://github.com/MaksGovor/numerical/tree/main/lab6)
 - [diffur solver](https://github.com/MaksGovor/numerical/tree/main/lab7)
-
-
